@@ -2,168 +2,117 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, ActivityIndicator, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from "axios";
-import { DataTable } from 'react-native-paper';
+import { Table, TableWrapper, Row } from 'react-native-table-component';
 
 const { width } = Dimensions.get('window');
 
 const Member = ({ navigation }) => {
+    
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     
-
-
-    
-    
+    const tableHead = ['ID', 'Register_no', 'Rglsi_id', 'Title', 'Member_Name', 'DOB', 'Degree', 'Sts_dt', 'Sts_type', 'Master', 'R_g_rank', 'G_rank', 'Mobile', 'Email', 'Address', 'Username', 'Password'];
+    const widthArr = Array(tableHead.length).fill(140); 
 
     useEffect(() => {
-        
         fetchMemberData();
     }, []);
 
-
     const fetchMemberData = async () => {
-      setIsLoading(true);
-      try {
-          const response = await axios.get('https://orphean-misleads.000webhostapp.com/Lodge/View.php');
-          setData(response.data);                
-      } catch (error) {
-          console.error(error);
-      } finally {
-          setIsLoading(false);
-      }
-  };
+        setIsLoading(true);
+        try {
+            const response = await axios.get('https://orphean-misleads.000webhostapp.com/Lodge/View.php');           
+            setData(response.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-  
-      if (searchTerm == ""){
-        fetchMemberData();
-      }
-      const search = new RegExp(searchTerm, 'i');
-      const filtered = data.filter((item) => {
-        return search.test(item.member_name);
-      });
-      setData(filtered);
+        const search = new RegExp(searchTerm, 'i');
+        const filtered = data.filter(item => search.test(item.member_name));
+        setData(filtered);
     }, [searchTerm]);
 
-
-
-    const renderRow = ({ item, index }) => (
-        <DataTable.Row>
-            <DataTable.Cell style={styles.cell}>{item.id}</DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>{item.register_no}</DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>{item.rglsi_id}</DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>{item.title}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.member_name}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.dob}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.degree}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.sts_dt}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.sts_type}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.master}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.r_g_rank}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.g_rank}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.mobile}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.email}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.address}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.username}</DataTable.Cell>
-        <DataTable.Cell style={styles.cell}>{item.password}</DataTable.Cell>        
-        </DataTable.Row>
-    );
-
+   
     return (
         <View style={styles.container}>
+          
             <View style={styles.header}>
-                <Icon name="chevron-left" size={25} style={{ color: '#ffffff' }} onPress={navigation.goBack} />
-                <Text style={styles.headerText}>MEMBER DETAILS</Text>
-                <Icon name="sort-variant" size={28} style={{ color: '#ffffff' }} />
+            <Icon name="chevron-left" size={25} style={{ color: '#ffffff', marginTop:10, }} onPress={navigation.goBack} />
+            <Text style={styles.headerText}>MEMBER DETAILS</Text>
+            <Icon name="sort-variant" size={28} style={{ color: '#ffffff', marginTop:-25, marginLeft:320 }} />
             </View>
-            <Image source={require('./img/img4.jpg')} resizeMode="contain" style={styles.image} />
             <View style={styles.searchInputContainer}>
                 <Icon name="magnify" style={styles.searchIcon} size={25} />
                 <TextInput
                     style={styles.input}
                     placeholder="Search"
                     placeholderTextColor="#000"
-                    onChangeText={(text) => {
-                      setSearchTerm(text);  
-                          
-                    }} 
+                    onChangeText={setSearchTerm}
                 />
             </View>
-            <ScrollView horizontal showsVerticalScrollIndicator>
-                <DataTable style={styles.dataTable}>
-                <DataTable.Header style={{backgroundColor:'#660066'}}>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff'}} >ID</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Register_no</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Rglsi_id</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Title</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Member name</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>DOB</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Degree</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Sts_dt</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Sts_type</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Master</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>R_g_rank</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>G_rank</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Mobile</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Email</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Address</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Username</DataTable.Title>
-        <DataTable.Title textStyle={{fontSize:15, color:'#ffffff', marginLeft:20}}>Password</DataTable.Title>
-        </DataTable.Header>
-                    <FlatList
-                        data={data}
-                        renderItem={renderRow}
-                        keyExtractor={(item, index) => item.register_no.toString() + index}
-                    />
-                </DataTable>
-            </ScrollView>
-            {isLoading && (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#660066" />
-                    <Text style={styles.loadingText}>Please wait, loading...</Text>
-                </View>
-            )}
+
+            
+                <ScrollView horizontal={true}>
+                    <View>
+                        <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+                            <Row data={tableHead} widthArr={widthArr} style={styles.header} textStyle={styles.text1} />
+                        </Table>
+                        <ScrollView style={styles.dataWrapper}>
+                            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+                                {data.map((rowData, index) => (
+                                    <Row
+                                        key={index}
+                                        data={Object.values(rowData)}
+                                        widthArr={widthArr}
+                                        style={[styles.row, index % 2 && { backgroundColor: '#ffffff' }]}
+                                        textStyle={styles.text}
+                                    />
+                                ))}
+                            </Table>
+                        </ScrollView>
+                    </View>
+                </ScrollView>
+                {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#660066" />
+          <Text style={[styles.loadingText, { color: 'white' }]}>Please wait, loading...</Text>
         </View>
+      )}
+
+            </View>
+        // </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#ffffcc',
-    },
+    // container: {
+    //     flex: 1,
+    //     backgroundColor: '#ffffcc',
+    // },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 18,
-        paddingVertical: 18,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
         backgroundColor: '#660066',
+        
     },
     headerText: {
         fontWeight: 'bold',
         fontSize: 18,
         color: '#ffffff',
+        marginLeft:100,
+        marginTop:-25
     },
     image: {
         width: '100%',
         height: 200,
         marginBottom: 10,
-    },
-    dataTable: {
-        backgroundColor: '#ffeb99',
-        borderWidth: 3,
-        borderLeftWidth: 3,
-        borderRightWidth: 3,
-        marginLeft: 10,
-        marginRight: 20,
-        marginTop: 50,
-        marginBottom: 20,
-    },
-    cell: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     searchInputContainer: {
         flexDirection: 'row',
@@ -171,6 +120,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 15,
         marginBottom: 10,
+        marginTop:20,
         marginHorizontal: 20,
         borderWidth: 1,
     },
@@ -183,17 +133,16 @@ const styles = StyleSheet.create({
         color: '#000',
         marginLeft: 15,
     },
-    loadingContainer: {
-        ...StyleSheet.absoluteFillObject,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    loadingText: {
-        marginTop: 10,
-        fontSize: 16,
-        color: 'white',
-    },
+    container: { flex: 1, padding: 16, paddingTop: 20, backgroundColor: '#fff' },
+    header: { height: 50, backgroundColor: '#660066' },
+    text: { textAlign: 'center', fontWeight: '100', color: '#000', fontWeight:'15', fontStyle:'normal'},
+    text1: { textAlign: 'center', fontWeight: '100', color: '#fff', fontWeight:'bold', fontStyle:'normal'},
+    dataWrapper: { marginTop: -1 },
+    row: { flexDirection: 'row',height: 90, backgroundColor: '#E7E6E1' },
+    column: {
+        flex: 2, // Adjust this flex value to control the width of the column
+        // Other styles for column can be added here
+      },
 });
 
 export default Member;
