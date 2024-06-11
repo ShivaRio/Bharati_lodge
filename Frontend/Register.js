@@ -158,7 +158,7 @@ const Register = ({navigation}) => {
 
 const saveDetails = () => {
   if (validateForm()) {
-    setIsLoading(true);
+    
     fetch('https://orphean-misleads.000webhostapp.com/Lodge/Register.php', {
       method: 'POST',
       headers: {
@@ -185,6 +185,7 @@ const saveDetails = () => {
         memberDegrees: JSON.stringify(memberDegrees),
       })       
     })
+
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -196,7 +197,7 @@ const saveDetails = () => {
       
       if (responseJson) {
         
-        console.log('Success: Register Sucessfully', responseJson);
+        
       } else {
         throw new Error('Invalid response from server');
       }
@@ -204,7 +205,7 @@ const saveDetails = () => {
     .catch(error => {
       setIsLoading(false);
       console.error('Error registering user:', error);
-      Alert.alert('Success: Register Sucessfully');
+      Alert.alert('Error: Register unsucessfully');
     })
   }
 };

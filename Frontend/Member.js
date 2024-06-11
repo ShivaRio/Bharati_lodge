@@ -37,14 +37,18 @@ const Member = ({ navigation }) => {
         setData(filtered);
     }, [searchTerm]);
 
-   
+    const navigateToSubscription = () => {
+        navigation.navigate('Home');
+    };
+
+
     return (
         <View style={styles.container}>
           
             <View style={styles.header}>
-            <Icon name="chevron-left" size={25} style={{ color: '#ffffff', marginTop:10, }} onPress={navigation.goBack} />
+            <Icon name="chevron-left" size={28} style={{ color: '#ffffff', marginTop:10, marginLeft:20 }} onPress={navigateToSubscription} />
             <Text style={styles.headerText}>MEMBER DETAILS</Text>
-            <Icon name="sort-variant" size={28} style={{ color: '#ffffff', marginTop:-25, marginLeft:320 }} />
+            <Icon name="logout" size={28} style={{ color: '#ffffff', marginTop:-25, marginLeft:350 }} onPress={navigation.goBack}/>
             </View>
             <View style={styles.searchInputContainer}>
                 <Icon name="magnify" style={styles.searchIcon} size={25} />
@@ -58,8 +62,8 @@ const Member = ({ navigation }) => {
 
             
                 <ScrollView horizontal={true}>
-                    <View>
-                        <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+                    <View >
+                        <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9', padding:10, paddingTop:10 }}>
                             <Row data={tableHead} widthArr={widthArr} style={styles.header} textStyle={styles.text1} />
                         </Table>
                         <ScrollView style={styles.dataWrapper}>
@@ -85,20 +89,15 @@ const Member = ({ navigation }) => {
       )}
 
             </View>
-        // </View>
+        
     );
 };
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    //     backgroundColor: '#ffffcc',
-    // },
+   
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 20,
         backgroundColor: '#660066',
         
     },
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
         color: '#ffffff',
-        marginLeft:100,
+        marginLeft:120,
         marginTop:-25
     },
     image: {
@@ -133,16 +132,14 @@ const styles = StyleSheet.create({
         color: '#000',
         marginLeft: 15,
     },
-    container: { flex: 1, padding: 16, paddingTop: 20, backgroundColor: '#fff' },
+    container: { flex: 1, backgroundColor: '#fff' },
     header: { height: 50, backgroundColor: '#660066' },
-    text: { textAlign: 'center', fontWeight: '100', color: '#000', fontWeight:'15', fontStyle:'normal'},
-    text1: { textAlign: 'center', fontWeight: '100', color: '#fff', fontWeight:'bold', fontStyle:'normal'},
+   
+    text: { textAlign: 'center', fontWeight: 'bold', color: '#000', fontStyle:'normal'},
+    text1: { textAlign: 'center', color: '#fff', fontWeight:'bold', fontStyle:'normal'},
     dataWrapper: { marginTop: -1 },
     row: { flexDirection: 'row',height: 90, backgroundColor: '#E7E6E1' },
-    column: {
-        flex: 2, // Adjust this flex value to control the width of the column
-        // Other styles for column can be added here
-      },
+    column: {flex: 2},
 });
 
 export default Member;

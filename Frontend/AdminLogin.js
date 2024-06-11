@@ -8,76 +8,53 @@ const {width} = Dimensions.get('screen');
 
 const Login = ( {navigation}) =>  {
 
-  const [membername, setMembername] = useState('');
+  const [Admin, setAdmin] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, seterror] = useState('');
+  const [error, seterror] = useState(false);
   
 
   
 
   const handleLogin = () => {
-    
-    if (!membername || !password) {
-        alert('Please enter both membername and password');
-        return; 
-    }
-    
-    fetch('https://orphean-misleads.000webhostapp.com/Lodge/Login.php', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        membername: membername,
-        password: password,
-      })
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      if (responseJson === 'Data Matched') {
-        navigation.navigate('Home', { username: membername });
-        // Clear input fields after successful login
-        setMembername('');
-        setPassword('');
-      } else {
-        Alert.alert(responseJson);
-      }
-    })
-    .catch((error) => {
-      alert('Invalid username or password');
-      seterror(error);
-    });
-};
+    navigation.navigate('AdminHome');
+  //   }
 
+  //   if(Admin =="Admin" && password =="Admin123")
+  //   {
+  //     navigation.navigate('AdminHome');
+  //   }
+  //   else
+  //   {
 
-  
-
+  //     seterror(true)
+  //         }
+   
+  };
   return (
     
-    <SafeAreaView  style={styles.container}>
+    <SafeAreaView style={styles.container}>
      
-    <Text style={styles.title} >Member Login</Text>
+    <Text style={styles.title}>Admin Here!</Text>
   
     <View style={styles.imgage1}>
-    <Image source={require('./img/img3.jpg')} resizeMode="contain" style={styles.logo} />
+    <Image source={require('./img/2150709830.jpg')} resizeMode="contain" style={styles.logo} />
     </View>
     <View style={styles.inputContainer}>
     <TextInput
         style={styles.input1}
-        placeholder="Enter Your Member Name"
-        value={membername}
+        placeholder="Admin Name"
+        value={Admin}
         placeholderTextColor="black"        
         onChangeText={(text) => {
-          setMembername(text);          
+          setAdmin(text);          
         }}        
       />
       </View>
     <View style={styles.inputContainer}>
      <TextInput    
        style={styles.input1}    
-       placeholder={showPassword ? "Enter Your Password" : "Enter Your Password 🔒"}
+       placeholder={showPassword ? "Enter Your Password" : "Admin Password 🔒"}
         secureTextEntry={!showPassword}
         value={password}
         placeholderTextColor="black"
@@ -97,17 +74,8 @@ const Login = ( {navigation}) =>  {
       <TouchableHighlight style={styles.button} underlayColor="lightblue" onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableHighlight>
-      <TouchableOpacity activeOpacity = { .4 }  onPress={() => navigation.navigate('AdminLogin')} >
-      <Text style={{fontSize:18, marginTop:15, marginBottom:10,marginRight:200, color:'#660066',fontWeight:'bold'  }}>Admin Here!</Text>
-      </TouchableOpacity>
       
-     
-
-      <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('Register')}>
-      <Text style={{ color:'#660066', fontWeight:'bold', textAlign:'center', fontSize:20, marginTop:-35, marginLeft:210, marginBottom:23 }}>New Register</Text>
-      </TouchableOpacity>     
-
-      {error &&  <Text style={{ color: 'red', marginBottom:-30,}}>Invalid Credentials</Text>}
+         {error &&  <Text style={{ color: 'red', marginBottom:-30,}}>Invalid Credentials</Text>}
           
       
       </SafeAreaView>
@@ -139,15 +107,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 25,
     paddingVertical:22,
-    marginTop:22,
-    marginBottom:-28,
+    marginTop:-20,
+    marginBottom:18,
   },
 
   imgage1:{
     alignItems:'center',
     justifyContent:"center",
-    marginBottom:-20,
-    marginTop:-25,
+    marginTop:-20,
     },
  
   logo: {
