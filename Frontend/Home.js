@@ -5,13 +5,13 @@ import { Table, TableWrapper, Row } from 'react-native-table-component';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {launchImageLibrary, r} from 'react-native-image-picker';
-
+import {launchImageLibrary} from 'react-native-image-picker';
+import FlashMessage from 'react-native-flash-message';
+const SERVER_URL = 'https://orphean-misleads.000webhostapp.com/Lodge';
 
 const Home = ({ navigation, route }) => {
 
   const {username}= route.params
-  
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,22 +20,20 @@ const Home = ({ navigation, route }) => {
   const [Visiblepayment, setVisiblepayment] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
 
-  const [MemberName, setMemberName] = useState('');
+  const [member_name, setMemberName] = useState('');
   const [Amount, setAmount] = useState('');
   const [Date, setDate] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [Transaction, setTransaction] = useState('');
-  const [Transactionid, setTransactionid] = useState('');
-  const [photo, setPhoto] = useState(null);
+  const [Transaction_Method, setTransaction] = useState('');
+  const [Transaction_ID, setTransactionid] = useState('');
+  const [Photo, setPhoto] = useState(null);
+  
 
   const placeholderImage = require('./img/placeholder.png');  
 
-
-
-
   
   const ChoosePhoto = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+    launchImageLibrary({ mediaType: 'Photo' }, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -49,83 +47,11 @@ const Home = ({ navigation, route }) => {
   const handleRemovePhoto = () => {
     setPhoto(null);
   };
+ 
 
-  // const handlepaymodel = () =>{
-  //   const formData = new FormData();
-  //   formData.append('MemberName', MemberName);
-  //   formData.append('Amount', Amount);
-  //   formData.append('Date', Date);
-  //   formData.append('Transaction', Transaction);
-  //   formData.append('photo', photo); // Add screenshot here
-
-  //   axios.post("https://orphean-misleads.000webhostapp.com/Lodge/Payment.php", formData, {
-  //     headers: {
-  //         'Content-Type': 'multipart/form-data'
-  //     }
-  // })
-  // .then(response => {
-  //     const data = response.data;
-  //     if (data.success) {
-  //         console.log(data.message);
-  //         // Optionally, you can perform additional actions upon successful submission
-  //     } else {
-  //         console.error(data.message);
-  //         // Optionally, you can handle the error in another way
-  //     }
-  // })
-  // .catch(error => {
-  //     console.error('Error:', error);
-  //     // Optionally, you can handle the error in another way
-  // });
-    
-  // };
-
-
-
-  // const handlepaymodel = () => {
-  //   if (!MemberName || !Amount || !Date || !Transaction || !photo) {
-  //     Alert.alert('Please fill all the fields and select a photo');
-  //     return;
-  //   }
-
-  //   const data = new FormData();
-  //   data.append('MemberName', MemberName);
-  //   data.append('Amount', Amount);
-  //   data.append('Date', Date);
-  //   data.append('Transaction', Transaction);
-  //   data.append('Photo', {
-  //     uri: photo.uri,
-  //     type: photo.type,
-  //     name: photo.fileName,
-  //   });
-
-  //   fetch('https://orphean-misleads.000webhostapp.com/Lodge/Payment.php', {
-  //     method: 'POST',
-  //     body: data,
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-  //       Alert.alert('Response', responseJson);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       Alert.alert('Error', 'Failed to upload data');
-  //     });
-  // };
-
-
-
-
-
-  const tableHead = ['ID', 'Rglsi_id', 'Member_Name', 'Degree', 'Default_Year', 
-    'Amount', 'Status', 'Arrears', 'Arrear_status', 'Actions'
-  ];
+  const tableHead = ['ID', 'Rglsi_id', 'Member_Name', 'Degree', 'Default_Year', 'Amount', 'Status', 'Arrears', 'Arrear_status', 'Actions'];
   const widthArr = Array(tableHead.length).fill(140);
-
-
+  const rowProps = {data: tableHead, widthArr: widthArr, style: styles.headerRow, textStyle: styles.headerText1};
 
   useEffect(() => {
     fetchSubscriptionData();
@@ -164,7 +90,6 @@ const Home = ({ navigation, route }) => {
   );
 
   const handleClick = ()=> {
-
     setVisible (true);
     setModalVisible(false);
     
@@ -174,7 +99,6 @@ const Home = ({ navigation, route }) => {
     setVisiblepayment(false);
     setModalVisible(false);
     setVisible (false);
-
   };
 
 
@@ -188,10 +112,8 @@ const Home = ({ navigation, route }) => {
 
   const handleConfirm = date => {
     const originalDate = date.toISOString().split('T')[0];
-
     const [year, month, day] = originalDate.split('-');
     const formattedDate = `${day}-${month}-${year}`;
-
     setDate(formattedDate);
     hideDatePicker();
   };
@@ -199,99 +121,53 @@ const Home = ({ navigation, route }) => {
   const dropdown = [
     {label: 'By Cash', value: 'By Cash'},
     {label: 'UPI', value: 'UPI'},
-    {label: 'Card', value: 'Card'},
-  ];
+    {label: 'Card', value: 'Card'}, ];
 
 
-  // const handlepaymodel = () => {
-  //   fetch('https://orphean-misleads.000webhostapp.com/Lodge/Payment_Insert.php', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       MemberName: MemberName,
-  //       Amount: Amount,
-  //       Date: Date,
-  //       Transaction: Transaction,
-  //       Transactionid: Transactionid,
-  //     })       
-  //   })
-  //   .then(response => {
-  //     if (!response.ok) {
-  //       throw new Error('Network response was not ok');
-  //     }
-  //     return response.json();
-  //   })
-  //   .then(responseJson => {
-  //     console.log('Response:', responseJson);
-  //     if (responseJson.success) { // Assuming your server responds with a JSON containing a 'success' field
-  //       setVisiblepayment(true);
-  //       setMemberName('');
-  //       setAmount('');
-  //       setDate('');
-  //       setTransaction('');
-  //       Alert.alert('Success: Payment successfully');
-  //     } else {
-  //       throw new Error('Invalid response from server');
-  //     }
-  //   })
-  //   .catch(error => {
-  //     console.error('Error registering user:', error);
-  //     Alert.alert('Error: Payment not successful');
-  //   });
-  // };
-  
-  const handlePayModel = () => {
-    fetch('https://orphean-misleads.000webhostapp.com/Lodge/Payment_Insert.php', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        MemberName: MemberName,
-        Amount: Amount,
-        Date: Date,
-        Transaction: Transaction,
-        Transactionid: Transactionid,
-        // Photo: Photo, // Assuming you want to send Photo as well
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.statusText}`);
+
+const handlePayModel = async () => {
+  const formData = new FormData();
+  formData.append('member_name', member_name);
+  formData.append('Amount', Amount);
+  formData.append('Date', Date);
+  formData.append('Transaction_Method', Transaction_Method);
+  formData.append('Transaction_ID', Transaction_ID);
+  formData.append('Photo', {
+    uri: Photo.uri,
+    type: Photo.type,
+    name: Photo.fileName,
+  });
+
+  try {
+    const response = await axios.post(`${SERVER_URL}/photo_upload.php`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       }
-      return response.json();
-    })
-    .then(responseJson => {
-      console.log('Response JSON:', responseJson);
-      if (responseJson.success) {
-        setVisiblepayment(true);
-        setMemberName('');
-        setAmount('');
-        setDate('');
-        setTransaction('');
-        setTransactionid('');
-        setPhoto('');
-      } else {
-        throw new Error(`Server error: ${responseJson.message || 'Invalid response from server'}`);
-      }
-    })
-    .catch(error => {
-      console.error('There has been a problem with your fetch operation:', error);
-      Alert.alert(`Error: ${error.message}`);
-    });
-  };
-  
-  const rowProps = {
-    data: tableHead,
-    widthArr: widthArr,
-    style: styles.headerRow,
-    textStyle: styles.headerText1,
-  };
+    );
+    const data = response.data;
+    if (data.success) {
+      console.log(data.message);
+      Alert.alert('Payment details succesfully')
+      setMemberName(null);
+      setAmount(null);
+      setDate(null);
+      setTransaction(null);
+      setTransactionid(null);
+        setPhoto(null);
+          } else {
+      console.error(data.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    Alert.alert('Payment details unsuccesfully', error)
+      }};
 
+
+  
+ 
 
   return (
     <View style={styles.container}>
@@ -343,6 +219,7 @@ const Home = ({ navigation, route }) => {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle1}>Details</Text>
+              <Text style={styles.modalTitle}>Name: {selectedRowData.member_name}</Text>
               <Text style={styles.modalTitle}>Degree: {selectedRowData.degree}</Text>
               <Text style={styles.modalTitle}>Default Year: {selectedRowData.year}</Text>
               <Text style={styles.modalTitle}>Amount: {selectedRowData.amount}</Text>
@@ -382,10 +259,10 @@ const Home = ({ navigation, route }) => {
 {Visible && (
         <Modal
           animationType="slide"
-          transparent
+          transparent ={false}
           visible={Visible}
-          onRequestClose={() => setVisible(false)}
-        >
+          onRequestClose={() => setVisible(false)}>
+           <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
             <Icon name="close" size={28} style={styles.icon1} onPress={()=>setVisible(false)} />
@@ -437,7 +314,7 @@ const Home = ({ navigation, route }) => {
         valueField="value"
         placeholder="Transaction Type"
         searchPlaceholder="Search..."
-        value={Transaction}
+        value={Transaction_Method}
         onChange={item => {
           setTransaction(item.value);
         }}
@@ -456,14 +333,13 @@ const Home = ({ navigation, route }) => {
        
           
 
-       <View style={styles.imageContainer}>
-  {photo ? (
-    <Image source={{ uri: (photo).uri }} style={styles.image} />
-    ) : (
-    <Image source={placeholderImage} style={styles.placeholderImage} />
-  )}
-  
-</View>
+          <View style={styles.imageContainer}>
+        {Photo ? (
+          <Image source={{ uri: Photo.uri }} style={styles.image} />
+        ) : (
+          <Image source={placeholderImage} style={styles.placeholderImage} />
+        )}
+      </View>
 
   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems:'center' }}>
 
@@ -482,15 +358,18 @@ const Home = ({ navigation, route }) => {
   
   </View>
 
+  <FlashMessage position="center" />
+
   <TouchableOpacity onPress={() => handlePayModel()}>
     <View style={styles.btnClose}>
       <Text style={styles.btnText}>Submit</Text>
     </View>
   </TouchableOpacity>
   
+  
 </View>
  </View>
-
+ </ScrollView>
   </Modal>
       )}
 
@@ -667,6 +546,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
+    marginBottom:80,
+    marginTop:40,
   },
   modalTitle: {
     fontSize: 20,
@@ -763,13 +644,16 @@ modalTitle1: {
   image: {
     width: '100%',
     height: '100%',
+    resizeMode: 'contain',
   },
   placeholderImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
   },
+  scrollViewContent: {
+    paddingBottom: 30, // Add some padding to the bottom for better spacing
+  },
 });
 
 export default Home;
-// http://localhost/Lodge/Payment_Insert.php',

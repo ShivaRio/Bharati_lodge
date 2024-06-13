@@ -6,7 +6,8 @@ import { Table, TableWrapper, Row } from 'react-native-table-component';
 
 const { width } = Dimensions.get('window');
 
-const Member = ({ navigation }) => {
+const Member = ({ navigation, route }) => {
+    const {username}= route.params
     
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
